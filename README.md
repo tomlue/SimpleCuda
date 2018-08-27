@@ -1,3 +1,9 @@
+This project successfully compiles and tests a scala dl4j project with the cuda-9.2 platform.  It was created because of the error described by the readme below.
+
+
+
+========================= original error
+
 This project successfully compiles (after removing `.ivy2/cache`).  
 I have added nvcc to my path and also included it in both `src/main/resources` and `src/test/resources`:
 
