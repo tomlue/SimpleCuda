@@ -1,7 +1,7 @@
 # SimpleCuda
 A simple project to demonstrate using dl4j with a cuda backend
 
-## Notes
+## Get started
 1. install cuda - https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
 2. check nvcc version (should be release 10.1 for this repo)
 
@@ -14,3 +14,4 @@ Cuda compilation tools, release 10.1, V10.1.243
 ```
 
 3. set dependencies right (check build.sbt)
+4. run `sbt test`
