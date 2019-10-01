@@ -73,7 +73,6 @@ class SimpleCudaTest extends FlatSpec with Matchers {
         .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
             .activation(Activation.SOFTMAX)
             .nIn(3).nOut(outputNum).build())
-        .backprop(true).pretrain(false)
         .build()
 
     //run the model
@@ -88,37 +87,6 @@ class SimpleCudaTest extends FlatSpec with Matchers {
     val output = model.output(testData.getFeatures())
     eval.eval(testData.getLabels(), output)
     println(eval.stats())
-  }
-
-  "SimpleCuda" should "merge vertices" in {
-
-    val outputStacks = List("A","B")
-
-    val inputStackConf = new NeuralNetConfiguration.Builder()
-        .activation(Activation.TANH)
-        .weightInit(WeightInit.XAVIER)
-        .updater(new Sgd(0.1))
-        .graphBuilder()
-        .addInputs("in")
-        .addLayer("0", new DenseLayer.Builder().nIn(3).nOut(3).build(),"in")
-        .addLayer("1", new DenseLayer.Builder().nIn(3).nOut(3).build(),"0")
-        
-    val conf = outputStacks.foldLeft(inputStackConf){ case (agg,name) => 
-      agg
-        .addLayer("A2", new DenseLayer.Builder().nIn(3).nOut(3).build(),"1")
-        .addVertex("Amerge", new MergeVertex(), Array("0","A2"):_*)
-        .addLayer("A", new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-            .activation(Activation.SOFTMAX)
-            .nIn(3+3).nOut(2).build(),"Amerge")
-        .addLayer("B2", new DenseLayer.Builder().nIn(3).nOut(3).build(),"1")
-        .addVertex("Bmerge", new MergeVertex(), Array("0","B2"):_*)
-        .addLayer("B", new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-          .activation(Activation.SOFTMAX)
-          .nIn(3+3).nOut(2).build(),"Bmerge")
-    }
-    .setOutputs("A","B")
-    .backprop(true)
-    .build()       
   }
 
   "SimpleCuda" should "load a serialized model" in {
